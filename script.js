@@ -72,14 +72,19 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-window.onload = () => { };
+const pcList = async () => {
+  const sectionsClass = document.querySelector('.items');
+  const recall = await fetchProducts('computador');
 
-// const listaPC = async () => {
-//   const sectionsClass = document.getElementsByClassName('items');
-//   const recall = await fetchProducts('computador');
-//   recall.results
-//   .forEach((pc) => sectionsClass
-//   .appendChild(createProductItemElement(pc)));
+  // recall.results.forEach((pc) => {
+  //   const apiItem = createProductItemElement(pc); sectionsClass.appendChild(apiItem);
+  // });
 
-//   return listaPC();
-// };
+  recall.results
+  .forEach((pc) => sectionsClass
+  .appendChild(createProductItemElement(pc)));
+};
+
+window.onload = () => { 
+  pcList();
+};
