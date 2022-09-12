@@ -73,3 +73,13 @@ const createCartItemElement = ({ id, title, price }) => {
 };
 
 window.onload = () => { };
+
+// const listaPC = async () => {
+//   const sectionsClass = document.getElementsByClassName('items');
+//   const recall = await fetchProducts('computador');
+//   recall.results
+//   .forEach((pc) => sectionsClass
+//   .appendChild(createProductItemElement(pc)));
+
+//   return listaPC();
+// };
