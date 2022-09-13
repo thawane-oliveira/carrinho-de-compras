@@ -7,8 +7,6 @@ const fetchProducts = async (goods) => {
     .then((response) => response.json())
     .then((info) => info)
     .catch((error) => error);
-
-  // return products;
 };
 
 // recebi ajuda do Tiago Quadros na mentoria

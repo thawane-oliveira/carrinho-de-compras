@@ -3,12 +3,16 @@
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
+const cartItemClickListener = (e) => {
+  e.target.remove();
+};
+
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
  * @returns {Element} Elemento de imagem do produto.
  */
- const createProductImageElement = (imageSource) => {
+const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
@@ -72,19 +76,32 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
+const addToCart = () => {
+  const addButtons = document.querySelectorAll('.item__add');
+
+  addButtons.forEach((button) => {
+    button.addEventListener('click', async (e) => {
+      const pid = e.target.parentElement.firstChild.innerText;
+      const resultFetchItem = await fetchItem(pid).then((res) => createCartItemElement(res));
+      const ol = document.querySelector('.cart__items');
+      ol.appendChild(resultFetchItem);
+    });
+  });
+};
+
 const pcList = async () => {
   const sectionsClass = document.querySelector('.items');
   const recall = await fetchProducts('computador');
 
-  // recall.results.forEach((pc) => {
-  //   const apiItem = createProductItemElement(pc); sectionsClass.appendChild(apiItem);
-  // });
-
   recall.results
-  .forEach((pc) => sectionsClass
-  .appendChild(createProductItemElement(pc)));
+    .forEach((pc) => {
+      const item = createProductItemElement(pc);
+      sectionsClass.appendChild(item);
+    });
+
+  addToCart();
 };
 
-window.onload = () => { 
+window.onload = () => {
   pcList();
 };
