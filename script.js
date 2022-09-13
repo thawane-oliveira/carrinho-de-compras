@@ -9,8 +9,8 @@ const cartItemClickListener = (e) => {
   e.target.remove();
 };
 
-const button = document.querySelector('.empty-cart');
-button.addEventListener('click', () => {
+const cbutton = document.querySelector('.empty-cart');
+cbutton.addEventListener('click', () => {
   cart.innerHTML = '';
 });
 
