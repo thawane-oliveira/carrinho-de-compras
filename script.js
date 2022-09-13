@@ -3,9 +3,16 @@
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
+const cart = document.querySelector('.cart__items');
+
 const cartItemClickListener = (e) => {
   e.target.remove();
 };
+
+const button = document.querySelector('.empty-cart');
+button.addEventListener('click', () => {
+  cart.innerHTML = '';
+});
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -87,6 +94,7 @@ const addToCart = () => {
       ol.appendChild(resultFetchItem);
     });
   });
+  saveCartItems(cart.innerHTML);
 };
 
 const pcList = async () => {
@@ -102,6 +110,19 @@ const pcList = async () => {
   addToCart();
 };
 
+// const save = async () => {
+//   const saveProducts = await saveCartItems();
+//   return saveProducts;
+// };
+
+// const load = () => {
+//   const recoverProducts = getSavedCartItems();
+//   if (localStorage.length > 0) {
+//     cart.innerHTML = recoverProducts;
+//   }
+// };
+
 window.onload = () => {
   pcList();
+  // load();
 };
