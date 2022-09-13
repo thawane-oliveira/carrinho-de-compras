@@ -5,14 +5,48 @@
 
 const cart = document.querySelector('.cart__items');
 
-const cartItemClickListener = (e) => {
-  e.target.remove();
+const totalValue = () => {
+  const cartLiItems = document.querySelectorAll('.cart__item');
+  const prices = [];
+  cartLiItems.forEach((li) => {
+    const price = li.innerText.split('PRICE: $');
+    prices.push(Number(price[1]));
+  });
+  const total = document.querySelector('.total-price');
+  const result = Math.round(prices.reduce((acc, curr) => acc + curr, 0) * 100) / 100;
+  total.innerText = result;
 };
 
-const cbutton = document.querySelector('.empty-cart');
-cbutton.addEventListener('click', () => {
-  cart.innerHTML = '';
-});
+const cartItemClickListener = (e) => {
+  e.target.remove();
+  saveCartItems(cart.innerHTML);
+  totalValue();
+};
+
+const clearAll = () => {
+  const clbutton = document.querySelector('.empty-cart');
+  clbutton.addEventListener('click', () => {
+    cart.innerHTML = '';
+    saveCartItems('');
+    totalValue();
+  });
+};
+
+/**
+ * Função responsável por criar e retornar um item do carrinho.
+ * @param {Object} product - Objeto do produto.
+ * @param {string} product.id - ID do produto.
+ * @param {string} product.title - Título do produto.
+ * @param {string} product.price - Preço do produto.
+ * @returns {Element} Elemento de um item do carrinho.
+ */
+const createCartItemElement = ({ id, title, price }) => {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+};
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -67,34 +101,24 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  */
 // const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
-/**
- * Função responsável por criar e retornar um item do carrinho.
- * @param {Object} product - Objeto do produto.
- * @param {string} product.id - ID do produto.
- * @param {string} product.title - Título do produto.
- * @param {string} product.price - Preço do produto.
- * @returns {Element} Elemento de um item do carrinho.
- */
-const createCartItemElement = ({ id, title, price }) => {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
+const showCartItem = async (e) => {
+  // mostra no carrinho
+  const pid = e.target.parentElement.firstChild.innerText;
+  const resultFetchItem = await fetchItem(pid).then((res) => createCartItemElement(res));
+  cart.appendChild(resultFetchItem);
+
+  // salva no localStorage
+  saveCartItems(cart.innerHTML);
+  totalValue();
 };
 
-const addToCart = () => {
+const addLogicToCartButton = () => {
   const addButtons = document.querySelectorAll('.item__add');
 
   addButtons.forEach((button) => {
-    button.addEventListener('click', async (e) => {
-      const pid = e.target.parentElement.firstChild.innerText;
-      const resultFetchItem = await fetchItem(pid).then((res) => createCartItemElement(res));
-      const ol = document.querySelector('.cart__items');
-      ol.appendChild(resultFetchItem);
-    });
+    button.addEventListener('click', showCartItem);
   });
-  saveCartItems(cart.innerHTML);
+  // totalValue();
 };
 
 const pcList = async () => {
@@ -107,22 +131,20 @@ const pcList = async () => {
       sectionsClass.appendChild(item);
     });
 
-  addToCart();
+  addLogicToCartButton();
 };
 
-// const save = async () => {
-//   const saveProducts = await saveCartItems();
-//   return saveProducts;
-// };
-
-// const load = () => {
-//   const recoverProducts = getSavedCartItems();
-//   if (localStorage.length > 0) {
-//     cart.innerHTML = recoverProducts;
-//   }
-// };
+const load = () => {
+  cart.innerHTML = getSavedCartItems('cartItems');
+  const cartLiItems = document.querySelectorAll('.cart__item');
+  cartLiItems.forEach((li) => {
+    li.addEventListener('click', cartItemClickListener);
+  });
+};
 
 window.onload = () => {
   pcList();
-  // load();
+  clearAll();
+  load();
+  totalValue();
 };
