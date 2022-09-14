@@ -4,6 +4,7 @@
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
 const cart = document.querySelector('.cart__items');
+const loading = document.querySelector('.loading');
 
 const totalValue = () => {
   const cartLiItems = document.querySelectorAll('.cart__item');
@@ -101,6 +102,16 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  */
 // const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
+const show = () => {
+  loading.innerText = 'carregando...';
+};
+
+// const hide = () => {
+//   const list = document.querySelector('items');
+//   const prepare = document.querySelector('.loading');
+//   list.removeChild(prepare);
+// };
+
 const showCartItem = async (e) => {
   // mostra no carrinho
   const pid = e.target.parentElement.firstChild.innerText;
@@ -130,8 +141,8 @@ const pcList = async () => {
       const item = createProductItemElement(pc);
       sectionsClass.appendChild(item);
     });
-
-  addLogicToCartButton();
+    loading.remove();
+    addLogicToCartButton();
 };
 
 const load = () => {
@@ -142,7 +153,8 @@ const load = () => {
   });
 };
 
-window.onload = () => {
+window.onload = async () => {
+  show();
   pcList();
   clearAll();
   load();
